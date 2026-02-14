@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinoth ❤️ Priya</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(to bottom,#0f2027,#203a43,#2c5364);
+    color:white;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Title Glow */
+h1{
+    margin-top:40px;
+    animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+    from{ text-shadow:0 0 10px #ff99cc;}
+    to{ text-shadow:0 0 30px #ff4da6;}
+}
+
+/* Slideshow */
+.slideshow{
+    position:relative;
+    width:90%;
+    max-width:350px;
+    height:250px;
+    margin:20px auto;
+    border-radius:15px;
+    overflow:hidden;
+}
+.slideshow img{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 1s, transform 4s;
+}
+.slideshow img.active{
+    opacity:1;
+    transform:scale(1.1);
+}
+
+/* Buttons */
+button{
+    padding:12px 25px;
+    font-size:1rem;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    margin:10px;
+}
+#yesBtn{
+    background:#ff4da6;
+    color:white;
+}
+#yesBtn:hover{ transform:scale(1.1); }
+#noBtn{
+    background:gray;
+    color:white;
+    position:absolute;
+}
+
+/* Popup */
+.popup{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.popup-box{
+    background:linear-gradient(135deg,#ff4da6,#ff99cc);
+    padding:30px;
+    border-radius:20px;
+    width:85%;
+    max-width:350px;
+    animation:popIn 0.6s ease;
+}
+@keyframes popIn{
+    from{transform:scale(0.5);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.name{
+    font-size:1.6rem;
+    animation:glow 2s infinite alternate;
+}
+
+/* Ring Animation */
+.ring{
+    font-size:55px;
+    animation:ringOpen 2s ease forwards;
+}
+@keyframes ringOpen{
+    0%{transform:scale(0);}
+    50%{transform:scale(1.5);}
+    100%{transform:scale(1);}
+}
+
+/* Reveal Dates */
+.hidden{ display:none; }
+.reveal{
+    margin-top:10px;
+    font-size:1.1rem;
+    animation:fadeIn 1.5s ease forwards;
+}
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* Fireworks */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:999;
+}
+
+.slideshow {
+    position: relative;
+    width: 90%;           /* almost full width */
+    max-width: 600px;     /* bigger width on desktop */
+    height: 450px;        /* INCREASED HEIGHT */
+    margin: 30px auto;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    background: black;    /* fills behind images */
+}
+
+.slideshow img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;    /* fills container without distortion */
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 4s ease;
+}
+
+.slideshow img.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05); /* slight zoom effect */
+}
+
+/* Mobile responsiveness */
+@media(max-width: 500px){
+    .slideshow {
+        width: 95%;
+        height: 300px;     /* proportionally smaller height for mobile */
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<h1>💍 Priya, Will You Marry Me? 💍</h1>
+<p>From this moment until forever...<br>
+<b></b> chooses you ❤️</p>
+
+<div class="slideshow">
+    <img src="c:\Users\vinoth\Downloads\1000221548-artguru (1).png" class="active">
+    <img src="c:\Users\vinoth\Downloads\IMG_20250331_105540682_HDR.jpg">
+    <img src="c:\Users\vinoth\Downloads\1765080230356 (1).jpg">
+</div>
+
+<button id="yesBtn">Yes 💖</button>
+<button id="noBtn">No 😜</button>
+
+<audio id="bgMusic" loop>
+    <source src="c:\Users\vinoth\Downloads\_Vinnaithandi_Varuvaya_Marriage_Bgm_Ringtone_(by Fringster.com).mp3" type="audio/mp3">
+</audio>
+
+<div id="popup" class="popup">
+    <div class="popup-box">
+        <div class="ring">💍</div>
+        <h2 class="name">Priya L ❤️ Vinoth Kumar D</h2>
+        <p>You said YES! My heart is yours forever Mine ✨</p>
+        <p>Ami tomake Bhalubhasi❤️✨💑</p>
+
+        <button onclick="showDates()">See Our Special Dates 💖</button>
+
+        <div id="dates" class="hidden">
+            <div class="reveal">💖 Engagement: February 19, 2026</div>
+            <div class="reveal">💑 Marriage: February 20, 2026</div>
+        </div>
+
+        <br>
+        <button onclick="closePopup()">Close 💕</button>
+    </div>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+
+/* Slideshow */
+let slides=document.querySelectorAll(".slideshow img");
+let index=0;
+setInterval(()=>{
+    slides[index].classList.remove("active");
+    index=(index+1)%slides.length;
+    slides[index].classList.add("active");
+},3000);
+
+/* Moving No */
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+    noBtn.style.left=Math.random()*(window.innerWidth-100)+"px";
+    noBtn.style.top=Math.random()*(window.innerHeight-50)+"px";
+});
+
+/* YES Button */
+const popup=document.getElementById("popup");
+const music=document.getElementById("bgMusic");
+
+document.getElementById("yesBtn").addEventListener("click",()=>{
+    popup.style.display="flex";
+    music.play();
+    startFireworks();
+});
+
+/* Show Dates */
+function showDates(){
+    document.getElementById("dates").classList.remove("hidden");
+}
+
+/* Close */
+function closePopup(){
+    popup.style.display="none";
+}
+
+/* Fireworks */
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+function startFireworks(){
+    setInterval(()=>{
+        for(let i=0;i<50;i++){
+            particles.push({
+                x:canvas.width/2,
+                y:canvas.height/2,
+                angle:Math.random()*2*Math.PI,
+                speed:Math.random()*5+2,
+                radius:Math.random()*3+1,
+                life:100
+            });
+        }
+    },800);
+    animate();
+}
+
+function animate(){
+    requestAnimationFrame(animate);
+    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+        p.x+=Math.cos(p.angle)*p.speed;
+        p.y+=Math.sin(p.angle)*p.speed;
+        p.life--;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.radius,0,2*Math.PI);
+        ctx.fillStyle=`hsl(${Math.random()*360},100%,50%)`;
+        ctx.fill();
+        if(p.life<=0) particles.splice(i,1);
+    });
+}
+
+</script>
+
+</body>
+</html>
